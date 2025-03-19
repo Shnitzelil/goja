@@ -12,7 +12,7 @@ func TestTaggedTemplateArgExport(t *testing.T) {
 	_ = vm.Set("f", func(v Value) {
 		v.Export()
 	})
-	vm.RunString("f`test`")
+	_, _ = vm.RunString("f`test`")
 }
 
 func TestVM1(t *testing.T) {
@@ -224,7 +224,7 @@ func BenchmarkEmptyLoop(b *testing.B) {
 	// prg.dumpCode(log.Printf)
 	b.StartTimer()
 	for i := 0; i < b.N; i++ {
-		vm.RunProgram(prg)
+		_, _ = vm.RunProgram(prg)
 	}
 }
 
@@ -255,11 +255,11 @@ func BenchmarkFuncCall(b *testing.B) {
 	vm := New()
 	prg := MustCompile("test.js", SCRIPT, false)
 
-	vm.RunProgram(prg)
+	_, _ = vm.RunProgram(prg)
 	if f, ok := AssertFunction(vm.Get("f")); ok {
 		b.StartTimer()
 		for i := 0; i < b.N; i++ {
-			f(nil, nil, intToValue(1), intToValue(2), intToValue(3), intToValue(4), intToValue(5), intToValue(6))
+			_, _ = f(nil, nil, intToValue(1), intToValue(2), intToValue(3), intToValue(4), intToValue(5), intToValue(6))
 		}
 	} else {
 		b.Fatal("f is not a function")

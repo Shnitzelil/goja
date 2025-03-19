@@ -44,7 +44,7 @@ func (self *_parser) parsePrimaryExpression() ast.Expression {
 		case "false":
 			value = false
 		default:
-			self.error(idx, "Illegal boolean literal")
+			_ = self.error(idx, "Illegal boolean literal")
 		}
 		return &ast.BooleanLiteral{
 			Idx:     idx,
@@ -105,7 +105,7 @@ func (self *_parser) parsePrimaryExpression() ast.Expression {
 		}
 	}
 
-	self.errorUnexpectedToken(self.token)
+	_ = self.errorUnexpectedToken(self.token)
 	self.nextStatement()
 	return &ast.BadExpression{From: idx, To: self.idx}
 }
@@ -123,7 +123,7 @@ func (self *_parser) parseImportMeta() *ast.MetaProperty {
 			Property: self.parseIdentifier(),
 		}
 	}
-	self.errorUnexpectedToken(self.token)
+	_ = self.errorUnexpectedToken(self.token)
 	return &ast.MetaProperty{
 		Meta: &ast.Identifier{
 			Name: unistring.String(token.IMPORT.String()),
@@ -165,7 +165,7 @@ func (self *_parser) parseSuperProperty() ast.Expression {
 			Idx: idx,
 		})
 	default:
-		self.error(idx, "'super' keyword unexpected here")
+		_ = self.error(idx, "'super' keyword unexpected here")
 		self.nextStatement()
 		return &ast.BadExpression{From: idx, To: self.idx}
 	}
@@ -205,7 +205,7 @@ func (self *_parser) parseParenthesisedExpression() ast.Expression {
 		for {
 			if self.token == token.ELLIPSIS {
 				start := self.idx
-				self.errorUnexpectedToken(token.ELLIPSIS)
+				_ = self.errorUnexpectedToken(token.ELLIPSIS)
 				self.next()
 				expr := self.parseAssignmentExpression()
 				list = append(list, &ast.BadExpression{
@@ -220,7 +220,7 @@ func (self *_parser) parseParenthesisedExpression() ast.Expression {
 			}
 			self.next()
 			if self.token == token.RIGHT_PARENTHESIS {
-				self.errorUnexpectedToken(token.RIGHT_PARENTHESIS)
+				_ = self.errorUnexpectedToken(token.RIGHT_PARENTHESIS)
 				break
 			}
 		}
@@ -230,7 +230,7 @@ func (self *_parser) parseParenthesisedExpression() ast.Expression {
 		return list[0]
 	}
 	if len(list) == 0 {
-		self.errorUnexpectedToken(token.RIGHT_PARENTHESIS)
+		_ = self.errorUnexpectedToken(token.RIGHT_PARENTHESIS)
 		return &ast.BadExpression{
 			From: opening,
 			To:   self.idx,
@@ -414,7 +414,7 @@ func (self *_parser) parseObjectPropertyKey() (string, unistring.String, ast.Exp
 				Value:   unistring.String(literal),
 			}
 		} else {
-			self.errorUnexpectedToken(tkn)
+			_ = self.errorUnexpectedToken(tkn)
 		}
 	}
 	return literal, parsedLiteral, value, tkn
@@ -471,7 +471,7 @@ func (self *_parser) parseObjectProperty() ast.Property {
 					Initializer: initializer,
 				}
 			} else {
-				self.errorUnexpectedToken(self.token)
+				_ = self.errorUnexpectedToken(self.token)
 			}
 		case (literal == "get" || literal == "set" || tkn == token.ASYNC) && self.token != token.COLON:
 			_, _, keyValue, tkn1 := self.parseObjectPropertyKey()
@@ -526,11 +526,11 @@ func (self *_parser) parseMethodDefinition(keyStartIdx file.Idx, kind ast.Proper
 	switch kind {
 	case ast.PropertyKindGet:
 		if len(parameterList.List) > 0 || parameterList.Rest != nil {
-			self.error(idx1, "Getter must not have any formal parameters.")
+			_ = self.error(idx1, "Getter must not have any formal parameters.")
 		}
 	case ast.PropertyKindSet:
 		if len(parameterList.List) != 1 || parameterList.Rest != nil {
-			self.error(idx1, "Setter must have exactly one formal parameter.")
+			_ = self.error(idx1, "Setter must have exactly one formal parameter.")
 		}
 	}
 	node := &ast.FunctionLiteral{
@@ -605,7 +605,7 @@ func (self *_parser) parseTemplateLiteral(tagged bool) *ast.TemplateLiteral {
 		start := self.offset
 		literal, parsed, finished, parseErr, err := self.parseTemplateCharacters()
 		if err != "" {
-			self.error(self.offset, err)
+			_ = self.error(self.offset, err)
 		}
 		res.Elements = append(res.Elements, &ast.TemplateElement{
 			Idx:     self.idxOf(start),
@@ -614,7 +614,7 @@ func (self *_parser) parseTemplateLiteral(tagged bool) *ast.TemplateLiteral {
 			Valid:   parseErr == "",
 		})
 		if !tagged && parseErr != "" {
-			self.error(self.offset, parseErr)
+			_ = self.error(self.offset, parseErr)
 		}
 		end := self.chrOffset - 1
 		self.next()
@@ -625,7 +625,7 @@ func (self *_parser) parseTemplateLiteral(tagged bool) *ast.TemplateLiteral {
 		expr := self.parseExpression()
 		res.Expressions = append(res.Expressions, expr)
 		if self.token != token.RIGHT_BRACE {
-			self.errorUnexpectedToken(self.token)
+			_ = self.errorUnexpectedToken(self.token)
 		}
 	}
 	return res
@@ -724,7 +724,7 @@ func (self *_parser) parseNewExpression() ast.Expression {
 		self.next()
 		if self.literal == "target" {
 			if self.opts.module && self.scope.outer == nil {
-				self.errorUnexpectedToken(token.IDENTIFIER) // TODO better error
+				_ = self.errorUnexpectedToken(token.IDENTIFIER) // TODO better error
 			}
 			return &ast.MetaProperty{
 				Meta: &ast.Identifier{
@@ -734,7 +734,7 @@ func (self *_parser) parseNewExpression() ast.Expression {
 				Property: self.parseIdentifier(),
 			}
 		}
-		self.errorUnexpectedToken(token.IDENTIFIER)
+		_ = self.errorUnexpectedToken(token.IDENTIFIER)
 	}
 	callee := self.parseLeftHandSideExpression()
 	if bad, ok := callee.(*ast.BadExpression); ok {
@@ -933,7 +933,7 @@ func (self *_parser) parseUnaryExpression() ast.Expression {
 			idx := self.idx
 			self.next()
 			if !self.scope.inAsync {
-				self.errorUnexpectedToken(token.AWAIT)
+				_ = self.errorUnexpectedToken(token.AWAIT)
 				return &ast.BadExpression{
 					From: idx,
 					To:   self.idx,
@@ -1285,7 +1285,7 @@ func (self *_parser) parseSingleArgArrowFunction(start file.Idx, async bool) ast
 	}
 	self.tokenToBindingId()
 	if self.token != token.IDENTIFIER {
-		self.errorUnexpectedToken(self.token)
+		_ = self.errorUnexpectedToken(self.token)
 		self.next()
 		return &ast.BadExpression{
 			From: start,
