@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"sync/atomic"
@@ -72,7 +72,7 @@ func TestProfiler1(t *testing.T) {
 		for i := 0; i < 500; i++ {
 			go func() {
 				vm := New()
-				vm.Set("sleep", sleep)
+				_ = vm.Set("sleep", sleep)
 				_, err := vm.RunScript("test123.js", `
 				function loop() {
 					for (let i = 0; i < 50000; i++) {

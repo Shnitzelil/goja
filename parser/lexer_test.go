@@ -3,9 +3,9 @@ package parser
 import (
 	"testing"
 
-	"github.com/grafana/sobek/file"
-	"github.com/grafana/sobek/token"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/file"
+	"github.com/Shnitzelil/goja/token"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 func TestLexer(t *testing.T) {

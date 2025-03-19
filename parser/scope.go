@@ -1,8 +1,8 @@
 package parser
 
 import (
-	"github.com/grafana/sobek/ast"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/ast"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type _scope struct {

@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"errors"
@@ -20,7 +20,7 @@ func TestGoReflectGet(t *testing.T) {
 	}
 	r := New()
 	o := O{X: 4, Y: "2"}
-	r.Set("o", o)
+	_ = r.Set("o", o)
 
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
@@ -47,7 +47,7 @@ func TestGoReflectSet(t *testing.T) {
 	}
 	r := New()
 	o := O{X: 4, Y: "2"}
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 
 	_, err := r.RunString(SCRIPT)
 	if err != nil {
@@ -62,7 +62,7 @@ func TestGoReflectSet(t *testing.T) {
 		t.Fatalf("Unexpected Y: %s", o.Y)
 	}
 
-	r.Set("o", o)
+	_ = r.Set("o", o)
 	_, err = r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -109,7 +109,7 @@ func TestGoReflectEnumerate(t *testing.T) {
 	}
 
 	r := New()
-	r.Set("o", S{X: 40, Y: 2})
+	_ = r.Set("o", S{X: 40, Y: 2})
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -130,7 +130,7 @@ func TestGoReflectCustomIntUnbox(t *testing.T) {
 	var i CustomInt = 40
 
 	r := New()
-	r.Set("i", i)
+	_ = r.Set("i", i)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -150,7 +150,7 @@ func TestGoReflectPreserveCustomType(t *testing.T) {
 	var i CustomInt = 42
 
 	r := New()
-	r.Set("i", i)
+	_ = r.Set("i", i)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -180,7 +180,7 @@ func TestGoReflectCustomIntValueOf(t *testing.T) {
 	var i CustomInt = 42
 
 	r := New()
-	r.Set("i", i)
+	_ = r.Set("i", i)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -201,8 +201,8 @@ func TestGoReflectEqual(t *testing.T) {
 	var y CustomInt = 42
 
 	r := New()
-	r.Set("x", x)
-	r.Set("y", y)
+	_ = r.Set("x", x)
+	_ = r.Set("y", y)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -232,7 +232,7 @@ func TestGoReflectMethod(t *testing.T) {
 	}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -253,7 +253,7 @@ func (o *testGoReflectMethod_O) Get() string {
 
 func TestGoReflectMethodPtr(t *testing.T) {
 	const SCRIPT = `
-	o.Set("42")
+	_ = o.Set("42")
 	o.Get()
 	`
 
@@ -262,7 +262,7 @@ func TestGoReflectMethodPtr(t *testing.T) {
 	}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -281,7 +281,7 @@ func TestGoReflectPtrMethodOnNonPtrValue(t *testing.T) {
 	var o testGoReflectMethod_O
 	o.Get()
 	vm := New()
-	vm.Set("o", o)
+	_ = vm.Set("o", o)
 	_, err := vm.RunString(`o.Get()`)
 	if err != nil {
 		t.Fatal(err)
@@ -292,7 +292,7 @@ func TestGoReflectPtrMethodOnNonPtrValue(t *testing.T) {
 	}
 
 	var b testBoolS
-	vm.Set("b", b)
+	_ = vm.Set("b", b)
 	_, err = vm.RunString(`b.Method()`)
 	if err != nil {
 		t.Fatal(err)
@@ -306,7 +306,7 @@ func TestGoReflectStructField(t *testing.T) {
 	}
 	var s S
 	vm := New()
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 
 	const SCRIPT = `
 	s.F.Set("Test");
@@ -333,7 +333,7 @@ func TestGoReflectProp(t *testing.T) {
 	}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -352,7 +352,7 @@ func TestGoReflectRedefineFieldSuccess(t *testing.T) {
 	o := testGoReflectMethod_O{}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -386,7 +386,7 @@ func TestGoReflectRedefineFieldNonWritable(t *testing.T) {
 	o := testGoReflectMethod_O{Test: "Test"}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -419,7 +419,7 @@ func TestGoReflectRedefineFieldConfigurable(t *testing.T) {
 	o := testGoReflectMethod_O{Test: "Test"}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -452,7 +452,7 @@ func TestGoReflectRedefineMethod(t *testing.T) {
 	o := testGoReflectMethod_O{Test: "Test"}
 
 	r := New()
-	r.Set("o", &o)
+	_ = r.Set("o", &o)
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -529,7 +529,7 @@ func TestGoReflectEmbeddedStruct(t *testing.T) {
 		ParentField2: "ParentField2",
 		ChildField:   3,
 	}
-	vm.Set("o", &o)
+	_ = vm.Set("o", &o)
 
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
@@ -575,7 +575,7 @@ func TestGoReflectCustomNaming(t *testing.T) {
 	o := &testStructWithJsonTags{"Hello world"}
 	r := New()
 	r.SetFieldNameMapper(&jsonTagNamer{})
-	r.Set("fn", func() *testStructWithJsonTags { return o })
+	_ = r.Set("fn", func() *testStructWithJsonTags { return o })
 
 	t.Run("get property", func(t *testing.T) {
 		v, err := r.RunString(`fn().b`)
@@ -619,7 +619,7 @@ func TestGoReflectCustomObjNaming(t *testing.T) {
 
 	t.Run("Set object in slice", func(t *testing.T) {
 		testSlice := &[]testStructWithJsonTags{{"Hello world"}}
-		r.Set("testslice", testSlice)
+		_ = r.Set("testslice", testSlice)
 		_, err := r.RunString(`testslice[0] = {b:"setted"}`)
 		if err != nil {
 			t.Fatal(err)
@@ -631,7 +631,7 @@ func TestGoReflectCustomObjNaming(t *testing.T) {
 
 	t.Run("Set object in map", func(t *testing.T) {
 		testMap := map[string]testStructWithJsonTags{"key": {"Hello world"}}
-		r.Set("testmap", testMap)
+		_ = r.Set("testmap", testMap)
 		_, err := r.RunString(`testmap["key"] = {b:"setted"}`)
 		if err != nil {
 			t.Fatal(err)
@@ -643,7 +643,7 @@ func TestGoReflectCustomObjNaming(t *testing.T) {
 
 	t.Run("Add object to map", func(t *testing.T) {
 		testMap := map[string]testStructWithJsonTags{}
-		r.Set("testmap", testMap)
+		_ = r.Set("testmap", testMap)
 		_, err := r.RunString(`testmap["newkey"] = {b:"setted"}`)
 		if err != nil {
 			t.Fatal(err)
@@ -682,7 +682,7 @@ func TestNonStructAnonFields(t *testing.T) {
 	`
 	vm := New()
 	vm.SetFieldNameMapper(fieldNameMapper1{})
-	vm.Set("a", &Test2{Test1: &Test1{M: true}, Test4: []int{1, 2}, test3: nil})
+	_ = vm.Set("a", &Test2{Test1: &Test1{M: true}, Test4: []int{1, 2}, test3: nil})
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -715,8 +715,8 @@ func TestStructNonAddressable(t *testing.T) {
 
 	var s S
 	vm := New()
-	vm.Set("s", s)
-	vm.Set("s1", &s)
+	_ = vm.Set("s", s)
+	_ = vm.Set("s1", &s)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -781,7 +781,7 @@ func TestHidingAnonField(t *testing.T) {
 
 	vm := New()
 	vm.SetFieldNameMapper(testFieldMapper{})
-	vm.Set("o", &o)
+	_ = vm.Set("o", &o)
 
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
@@ -832,7 +832,7 @@ func TestFieldOverriding(t *testing.T) {
 
 	vm := New()
 	vm.SetFieldNameMapper(testFieldMapper{})
-	vm.Set("o", &o)
+	_ = vm.Set("o", &o)
 
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
@@ -848,7 +848,7 @@ func TestDefinePropertyUnexportedJsName(t *testing.T) {
 
 	vm := New()
 	vm.SetFieldNameMapper(fieldNameMapper1{})
-	vm.Set("f", &T{unexported: 0})
+	_ = vm.Set("f", &T{unexported: 0})
 
 	_, err := vm.RunString(`
 	"use strict";
@@ -887,7 +887,7 @@ func (fieldNameMapperToLower) MethodName(_ reflect.Type, m reflect.Method) strin
 func TestHasOwnPropertyUnexportedJsName(t *testing.T) {
 	vm := New()
 	vm.SetFieldNameMapper(fieldNameMapperToLower{})
-	vm.Set("f", &testGoReflectMethod_O{})
+	_ = vm.Set("f", &testGoReflectMethod_O{})
 
 	_, err := vm.RunString(`
 	"use strict";
@@ -950,8 +950,8 @@ func TestNestedStructSet(t *testing.T) {
 		},
 	}
 	vm := New()
-	vm.Set("a", &a)
-	vm.Set("a1", a)
+	_ = vm.Set("a", &a)
+	_ = vm.Set("a1", a)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -1002,7 +1002,7 @@ func TestStructNonAddressableAnonStruct(t *testing.T) {
 `
 
 	vm := New()
-	vm.Set("a", &a)
+	_ = vm.Set("a", &a)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -1021,7 +1021,7 @@ func TestTagFieldNameMapperInvalidId(t *testing.T) {
 	type S struct {
 		Field int `json:"-"`
 	}
-	vm.Set("s", S{Field: 42})
+	_ = vm.Set("s", S{Field: 42})
 	res, err := vm.RunString(`s.hasOwnProperty("field") || s.hasOwnProperty("Field")`)
 	if err != nil {
 		t.Fatal(err)
@@ -1034,7 +1034,7 @@ func TestTagFieldNameMapperInvalidId(t *testing.T) {
 func TestPrimitivePtr(t *testing.T) {
 	vm := New()
 	s := "test"
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	res, err := vm.RunString(`s instanceof String && s == "test"`) // note non-strict equality
 	if err != nil {
 		t.Fatal(err)
@@ -1054,7 +1054,7 @@ func TestPrimitivePtr(t *testing.T) {
 
 func TestStringer(t *testing.T) {
 	vm := New()
-	vm.Set("e", errors.New("test"))
+	_ = vm.Set("e", errors.New("test"))
 	res, err := vm.RunString("e.toString()")
 	if err != nil {
 		t.Fatal(err)
@@ -1070,7 +1070,7 @@ func ExampleTagFieldNameMapper() {
 	type S struct {
 		Field int `json:"field"`
 	}
-	vm.Set("s", S{Field: 42})
+	_ = vm.Set("s", S{Field: 42})
 	res, _ := vm.RunString(`s.field`)
 	fmt.Println(res.Export())
 	// Output: 42
@@ -1082,7 +1082,7 @@ func ExampleUncapFieldNameMapper() {
 		Test: "passed",
 	}
 	vm.SetFieldNameMapper(UncapFieldNameMapper())
-	vm.Set("s", s)
+	_ = vm.Set("s", s)
 	res, _ := vm.RunString(`s.test + " and " + s.method("passed too")`)
 	fmt.Println(res.Export())
 	// Output: passed and passed too
@@ -1094,7 +1094,7 @@ func TestGoReflectWithProto(t *testing.T) {
 	}
 	var s S
 	vm := New()
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	vm.testScriptWithTestLib(`
 	(function() {
 	'use strict';
@@ -1133,7 +1133,7 @@ func TestGoReflectSymbols(t *testing.T) {
 	}
 	var s S
 	vm := New()
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	_, err := vm.RunString(`
 	'use strict';
 	var sym = Symbol(66);
@@ -1157,7 +1157,7 @@ func TestGoReflectSymbolEqualityQuirk(t *testing.T) {
 		Field: &Field{},
 	}
 	vm := New()
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	res, err := vm.RunString(`
 	var sym = Symbol(66);
 	var field1 = s.Field;
@@ -1182,11 +1182,11 @@ func TestGoObj__Proto__(t *testing.T) {
 		Field int
 	}
 	vm := New()
-	vm.Set("s", S{})
-	vm.Set("m", map[string]interface{}{})
-	vm.Set("mr", map[int]string{})
-	vm.Set("a", []interface{}{})
-	vm.Set("ar", []string{})
+	_ = vm.Set("s", S{})
+	_ = vm.Set("m", map[string]interface{}{})
+	_ = vm.Set("mr", map[int]string{})
+	_ = vm.Set("a", []interface{}{})
+	_ = vm.Set("ar", []string{})
 	_, err := vm.RunString(`
 	function f(s, expectedCtor, prefix) {
 		if (s.__proto__ !== expectedCtor.prototype) {
@@ -1218,7 +1218,7 @@ func TestGoReflectUnicodeProps(t *testing.T) {
 	}
 	vm := New()
 	var s S
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	_, err := vm.RunString(`
 	if (!s.hasOwnProperty("Тест")) {
 		throw new Error("hasOwnProperty");
@@ -1232,10 +1232,10 @@ func TestGoReflectUnicodeProps(t *testing.T) {
 func TestGoReflectPreserveType(t *testing.T) {
 	vm := New()
 	var expect = time.Duration(math.MaxInt64)
-	vm.Set(`make`, func() time.Duration {
+	_ = vm.Set(`make`, func() time.Duration {
 		return expect
 	})
-	vm.Set(`handle`, func(d time.Duration) {
+	_ = vm.Set(`handle`, func(d time.Duration) {
 		if d.String() != expect.String() {
 			t.Fatal(`expect`, expect, `, but get`, d)
 		}
@@ -1260,7 +1260,7 @@ func TestGoReflectCopyOnWrite(t *testing.T) {
 	s.I.Field = 1
 
 	vm := New()
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	_, err := vm.RunString(`
 		if (s.I.Field !== 1) {
 			throw new Error("s.I.Field: " + s.I.Field);
@@ -1296,10 +1296,10 @@ func TestGoReflectCopyOnWrite(t *testing.T) {
 func TestReflectSetReflectValue(t *testing.T) {
 	o := []testGoReflectMethod_O{{}}
 	vm := New()
-	vm.Set("o", o)
+	_ = vm.Set("o", o)
 	_, err := vm.RunString(`
 		const t = o[0];
-		t.Set("a");
+		_ = t.Set("a");
 		o[0] = {};
 		o[0].Set("b");
 		if (t.Get() !== "a") {
@@ -1321,7 +1321,7 @@ func TestReflectOverwriteReflectMap(t *testing.T) {
 	s.M = map[int]interface{}{
 		0: true,
 	}
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	_, err := vm.RunString(`
 	s.M = {1: false};
 	`)
@@ -1376,7 +1376,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		var b Bool = true
 
 		t.Run("Bool", func(t *testing.T) {
-			vm.Set("b", b)
+			_ = vm.Set("b", b)
 			f("+b", intToValue(1), t)
 			f("`${b}`", asciiString("true"), t)
 			f("b.toString()", asciiString("true"), t)
@@ -1384,7 +1384,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*Bool", func(t *testing.T) {
-			vm.Set("b", &b)
+			_ = vm.Set("b", &b)
 			f("+b", intToValue(1), t)
 			f("`${b}`", asciiString("true"), t)
 			f("b.toString()", asciiString("true"), t)
@@ -1395,7 +1395,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		var i Int = 1
 
 		t.Run("Int", func(t *testing.T) {
-			vm.Set("i", i)
+			_ = vm.Set("i", i)
 			f("+i", intToValue(1), t)
 			f("`${i}`", asciiString("1"), t)
 			f("i.toString()", asciiString("1"), t)
@@ -1403,7 +1403,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*Int", func(t *testing.T) {
-			vm.Set("i", &i)
+			_ = vm.Set("i", &i)
 			f("+i", intToValue(1), t)
 			f("`${i}`", asciiString("1"), t)
 			f("i.toString()", asciiString("1"), t)
@@ -1414,7 +1414,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		var ui Uint = 1
 
 		t.Run("Uint", func(t *testing.T) {
-			vm.Set("ui", ui)
+			_ = vm.Set("ui", ui)
 			f("+ui", intToValue(1), t)
 			f("`${ui}`", asciiString("1"), t)
 			f("ui.toString()", asciiString("1"), t)
@@ -1422,7 +1422,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*Uint", func(t *testing.T) {
-			vm.Set("ui", &i)
+			_ = vm.Set("ui", &i)
 			f("+ui", intToValue(1), t)
 			f("`${ui}`", asciiString("1"), t)
 			f("ui.toString()", asciiString("1"), t)
@@ -1433,7 +1433,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		var fl Float = 1.1
 
 		t.Run("Float", func(t *testing.T) {
-			vm.Set("fl", fl)
+			_ = vm.Set("fl", fl)
 			f("+fl", floatToValue(1.1), t)
 			f("`${fl}`", asciiString("1.1"), t)
 			f("fl.toString()", asciiString("1.1"), t)
@@ -1441,7 +1441,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*Float", func(t *testing.T) {
-			vm.Set("fl", &fl)
+			_ = vm.Set("fl", &fl)
 			f("+fl", floatToValue(1.1), t)
 			f("`${fl}`", asciiString("1.1"), t)
 			f("fl.toString()", asciiString("1.1"), t)
@@ -1450,7 +1450,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 
 		fl = Float(math.Inf(1))
 		t.Run("FloatInf", func(t *testing.T) {
-			vm.Set("fl", fl)
+			_ = vm.Set("fl", fl)
 			f("+fl", _positiveInf, t)
 			f("fl.toString()", asciiString("Infinity"), t)
 		})
@@ -1459,7 +1459,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 
 		var e Empty
 		t.Run("Empty", func(t *testing.T) {
-			vm.Set("e", &e)
+			_ = vm.Set("e", &e)
 			f("+e", _NaN, t)
 			f("`${e}`", asciiString("[object Object]"), t)
 			f("e.toString()", asciiString("[object Object]"), t)
@@ -1470,7 +1470,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 	t.Run("Stringers", func(t *testing.T) {
 		var b testBoolS = true
 		t.Run("Bool", func(t *testing.T) {
-			vm.Set("b", b)
+			_ = vm.Set("b", b)
 			f("`${b}`", asciiString("B"), t)
 			f("b.toString()", asciiString("B"), t)
 			f("b.valueOf()", valueTrue, t)
@@ -1478,7 +1478,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*Bool", func(t *testing.T) {
-			vm.Set("b", &b)
+			_ = vm.Set("b", &b)
 			f("`${b}`", asciiString("B"), t)
 			f("b.toString()", asciiString("B"), t)
 			f("b.valueOf()", valueTrue, t)
@@ -1487,7 +1487,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 
 		var i testIntS = 1
 		t.Run("Int", func(t *testing.T) {
-			vm.Set("i", i)
+			_ = vm.Set("i", i)
 			f("`${i}`", asciiString("I"), t)
 			f("i.toString()", asciiString("I"), t)
 			f("i.valueOf()", intToValue(1), t)
@@ -1495,7 +1495,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*Int", func(t *testing.T) {
-			vm.Set("i", &i)
+			_ = vm.Set("i", &i)
 			f("`${i}`", asciiString("I"), t)
 			f("i.toString()", asciiString("I"), t)
 			f("i.valueOf()", intToValue(1), t)
@@ -1504,7 +1504,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 
 		var s testStringS
 		t.Run("String", func(t *testing.T) {
-			vm.Set("s", s)
+			_ = vm.Set("s", s)
 			f("`${s}`", asciiString("S"), t)
 			f("s.toString()", asciiString("S"), t)
 			f("s.valueOf()", asciiString("S"), t)
@@ -1512,7 +1512,7 @@ func TestGoReflectToPrimitive(t *testing.T) {
 		})
 
 		t.Run("*String", func(t *testing.T) {
-			vm.Set("s", &s)
+			_ = vm.Set("s", &s)
 			f("`${s}`", asciiString("S"), t)
 			f("s.toString()", asciiString("S"), t)
 			f("s.valueOf()", asciiString("S"), t)
@@ -1542,7 +1542,7 @@ func (*testGoReflectFuncRt) C(call ConstructorCall, r *Runtime) *Object {
 func TestGoReflectFuncWithRuntime(t *testing.T) {
 	vm := New()
 	var s testGoReflectFuncRt
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	res, err := vm.RunString("s.M(true)")
 	if err != nil {
 		t.Fatal(err)
@@ -1566,7 +1566,7 @@ func TestGoReflectDefaultToString(t *testing.T) {
 	v := vm.ToValue(s).(*Object)
 	v.Delete("toString")
 	v.Delete("valueOf")
-	vm.Set("s", v)
+	_ = vm.Set("s", v)
 	_, err := vm.RunString(`
 		class S {
 			toString() {
@@ -1619,7 +1619,7 @@ func TestGoReflectUnexportedEmbedStruct(t *testing.T) {
 	}
 
 	vm := New()
-	vm.Set("foo", Foo{
+	_ = vm.Set("foo", Foo{
 		privateEmbed:  privateEmbed{A: "testA"},
 		PublicEmbed:   PublicEmbed{B: "testB"},
 		privateNested: privateNested{C: "testC"},
@@ -1673,7 +1673,7 @@ func TestNestedSliceAddr(t *testing.T) {
 
 	var d document
 	runtime := New()
-	runtime.Set("d", &d)
+	_ = runtime.Set("d", &d)
 
 	_, err := runtime.RunString(`
 	d.Items.push("Hello");

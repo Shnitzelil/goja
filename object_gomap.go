@@ -1,9 +1,9 @@
-package sobek
+package goja
 
 import (
 	"reflect"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type objectGoMapSimple struct {

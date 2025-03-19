@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"math"
@@ -7,8 +7,8 @@ import (
 	"unicode/utf16"
 	"unicode/utf8"
 
-	"github.com/grafana/sobek/parser"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/parser"
+	"github.com/Shnitzelil/goja/unistring"
 
 	"golang.org/x/text/collate"
 	"golang.org/x/text/language"

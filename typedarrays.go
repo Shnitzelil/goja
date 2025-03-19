@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"math"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"unsafe"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type byteOrder bool

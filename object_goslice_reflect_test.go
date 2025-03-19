@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"reflect"
@@ -14,7 +14,7 @@ func TestGoSliceReflectBasic(t *testing.T) {
 	sum;
 	`
 	r := New()
-	r.Set("a", []int{1, 2, 3, 4})
+	_ = r.Set("a", []int{1, 2, 3, 4})
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -34,7 +34,7 @@ func TestGoSliceReflectIn(t *testing.T) {
 	idx;
 	`
 	r := New()
-	r.Set("a", []int{1, 2, 3, 4})
+	_ = r.Set("a", []int{1, 2, 3, 4})
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -54,7 +54,7 @@ func TestGoSliceReflectSet(t *testing.T) {
 	`
 	r := New()
 	a := []int8{1, 2, 3, 4}
-	r.Set("a", a)
+	_ = r.Set("a", a)
 	_, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -80,7 +80,7 @@ func TestGoSliceReflectPush(t *testing.T) {
 
 	t.Run("Can push to array by array ptr", func(t *testing.T) {
 		a := []int8{1}
-		r.Set("a", &a)
+		_ = r.Set("a", &a)
 		_, err := r.RunString(`a.push (10)`)
 		if err != nil {
 			t.Fatal(err)
@@ -99,7 +99,7 @@ func TestGoSliceReflectPush(t *testing.T) {
 			A: []int{2},
 		}
 
-		r.Set("a", &a)
+		_ = r.Set("a", &a)
 		_, err := r.RunString(`a.A.push (10)`)
 		if err != nil {
 			t.Fatal(err)
@@ -118,7 +118,7 @@ func TestGoSliceReflectStructField(t *testing.T) {
 		A []int
 		B *[]int
 	}
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 	_, err := vm.RunString(`
 		'use strict';
 		s.A.push(1);
@@ -167,7 +167,7 @@ func TestGoSliceReflectProtoMethod(t *testing.T) {
 
 	r := New()
 	a := []int8{1, 2, 3, 4}
-	r.Set("a", a)
+	_ = r.Set("a", a)
 	ret, err := r.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -191,7 +191,7 @@ func TestGoSliceReflectMethod(t *testing.T) {
 	vm := New()
 	a := make(gosliceReflect_withMethods, 1)
 	a[0] = 42
-	vm.Set("a", a)
+	_ = vm.Set("a", a)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -215,7 +215,7 @@ func TestGoSliceReflectGetStr(t *testing.T) {
 func TestGoSliceReflectNilObjectIfaceVal(t *testing.T) {
 	r := New()
 	a := []Value{(*Object)(nil)}
-	r.Set("a", a)
+	_ = r.Set("a", a)
 	ret, err := r.RunString(`
 	""+a[0];
 	`)
@@ -231,8 +231,8 @@ func TestGoSliceReflectSetLength(t *testing.T) {
 	r := New()
 	a := []int{1, 2, 3, 4}
 	b := []testing.TB{&testing.T{}, &testing.T{}, (*testing.T)(nil)}
-	r.Set("a", &a)
-	r.Set("b", &b)
+	_ = r.Set("a", &a)
+	_ = r.Set("b", &b)
 	_, err := r.RunString(`
 	'use strict';
 	a.length = 3;
@@ -282,7 +282,7 @@ func TestGoSliceReflectSetLength(t *testing.T) {
 func TestGoSliceReflectProto(t *testing.T) {
 	r := New()
 	a := []*Object{{}, nil, {}}
-	r.Set("a", &a)
+	_ = r.Set("a", &a)
 	r.testScriptWithTestLib(`
 	var proto = [,2,,4];
 	Object.setPrototypeOf(a, proto);
@@ -308,8 +308,8 @@ func TestGoSliceReflectProtoProto(t *testing.T) {
 	r := New()
 	a := []*Object{{}, nil, {}}
 	proto := []*Object{{}, {}, {}, {}}
-	r.Set("a", &a)
-	r.Set("proto", proto)
+	_ = r.Set("a", &a)
+	_ = r.Set("proto", proto)
 	_, err := r.RunString(`
 	"use strict";
 	var protoproto = {};
@@ -338,7 +338,7 @@ func TestGoSliceReflectProtoProto(t *testing.T) {
 func TestGoSliceReflectDelete(t *testing.T) {
 	r := New()
 	a := []*Object{{}, nil, {}}
-	r.Set("a", a)
+	_ = r.Set("a", a)
 	v, err := r.RunString(`
 	delete a[0] && delete a[1] && delete a[3];
 	`)
@@ -353,7 +353,7 @@ func TestGoSliceReflectDelete(t *testing.T) {
 func TestGoSliceReflectPop(t *testing.T) {
 	r := New()
 	a := []string{"1", "", "3"}
-	r.Set("a", &a)
+	_ = r.Set("a", &a)
 	v, err := r.RunString(`
 	a.pop()
 	`)
@@ -368,7 +368,7 @@ func TestGoSliceReflectPop(t *testing.T) {
 func TestGoSliceReflectPopNoPtr(t *testing.T) {
 	r := New()
 	a := []string{"1", "", "3"}
-	r.Set("a", a)
+	_ = r.Set("a", a)
 	v, err := r.RunString(`
 	a.pop()
 	`)
@@ -382,7 +382,7 @@ func TestGoSliceReflectPopNoPtr(t *testing.T) {
 
 func TestGoSliceReflectLengthProperty(t *testing.T) {
 	vm := New()
-	vm.Set("s", []int{2, 3, 4})
+	_ = vm.Set("s", []int{2, 3, 4})
 	_, err := vm.RunString(`
 	if (!s.hasOwnProperty("length")) {
 		throw new Error("hasOwnProperty() returned false");
@@ -405,7 +405,7 @@ func (a testCustomSliceWithMethods) Method() bool {
 
 func TestGoSliceReflectMethods(t *testing.T) {
 	vm := New()
-	vm.Set("s", testCustomSliceWithMethods{1, 2, 3})
+	_ = vm.Set("s", testCustomSliceWithMethods{1, 2, 3})
 	_, err := vm.RunString(`
 	if (!s.hasOwnProperty("Method")) {
 		throw new Error("hasOwnProperty() returned false");
@@ -422,7 +422,7 @@ func TestGoSliceReflectMethods(t *testing.T) {
 
 func TestGoSliceReflectExportAfterGrow(t *testing.T) {
 	vm := New()
-	vm.Set("a", []int{1})
+	_ = vm.Set("a", []int{1})
 	v, err := vm.RunString(`
 		a.push(2);
 		a;
@@ -443,7 +443,7 @@ func TestGoSliceReflectExportAfterGrow(t *testing.T) {
 func TestGoSliceReflectSort(t *testing.T) {
 	vm := New()
 	type Thing struct{ Name string }
-	vm.Set("v", []*Thing{
+	_ = vm.Set("v", []*Thing{
 		{Name: "log"},
 		{Name: "etc"},
 		{Name: "test"},
@@ -464,7 +464,7 @@ func TestGoSliceReflectSort(t *testing.T) {
 
 func TestGoSliceReflect111(t *testing.T) {
 	vm := New()
-	vm.Set("v", []int32{
+	_ = vm.Set("v", []int32{
 		1, 2,
 	})
 	ret, err := vm.RunString(`
@@ -480,7 +480,7 @@ func TestGoSliceReflect111(t *testing.T) {
 	t.Log(ret.Export())
 	a := []int{1, 2}
 	a0 := reflect.ValueOf(a).Index(0)
-	a0.Set(reflect.ValueOf(0))
+	_ = a0.Set(reflect.ValueOf(0))
 	t.Log(a[0])
 }
 
@@ -488,8 +488,8 @@ func TestGoSliceReflectExternalLenUpdate(t *testing.T) {
 	data := &[]int{1}
 
 	vm := New()
-	vm.Set("data", data)
-	vm.Set("append", func(a *[]int, v int) {
+	_ = vm.Set("data", data)
+	_ = vm.Set("append", func(a *[]int, v int) {
 		if a != data {
 			panic(vm.NewTypeError("a != data"))
 		}
@@ -515,6 +515,6 @@ func BenchmarkGoSliceReflectSet(b *testing.B) {
 	b.ResetTimer()
 	v := intToValue(0)
 	for i := 0; i < b.N; i++ {
-		a.Set("0", v)
+		_ = a.Set("0", v)
 	}
 }

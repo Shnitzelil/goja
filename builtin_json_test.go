@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"encoding/json"
@@ -11,8 +11,8 @@ import (
 func TestJSONMarshalObject(t *testing.T) {
 	vm := New()
 	o := vm.NewObject()
-	o.Set("test", 42)
-	o.Set("testfunc", vm.Get("Error"))
+	_ = o.Set("test", 42)
+	_ = o.Set("testfunc", vm.Get("Error"))
 	b, err := json.Marshal(o)
 	if err != nil {
 		t.Fatal(err)
@@ -25,7 +25,7 @@ func TestJSONMarshalObject(t *testing.T) {
 func TestJSONMarshalGoDate(t *testing.T) {
 	vm := New()
 	o := vm.NewObject()
-	o.Set("test", time.Unix(86400, 0).UTC())
+	_ = o.Set("test", time.Unix(86400, 0).UTC())
 	b, err := json.Marshal(o)
 	if err != nil {
 		t.Fatal(err)
@@ -38,7 +38,7 @@ func TestJSONMarshalGoDate(t *testing.T) {
 func TestJSONMarshalObjectCircular(t *testing.T) {
 	vm := New()
 	o := vm.NewObject()
-	o.Set("o", o)
+	_ = o.Set("o", o)
 	_, err := json.Marshal(o)
 	if err == nil {
 		t.Fatal("Expected error")
@@ -55,7 +55,7 @@ func TestJSONStringifyCircularWrappedGo(t *testing.T) {
 	vm := New()
 	v := CircularType{}
 	v.Self = &v
-	vm.Set("v", &v)
+	_ = vm.Set("v", &v)
 	_, err := vm.RunString("JSON.stringify(v)")
 	if err == nil {
 		t.Fatal("Expected error")
@@ -107,7 +107,7 @@ func (s *testMarshalJSONErrorStruct) MarshalJSON() ([]byte, error) {
 func TestMarshalJSONError(t *testing.T) {
 	vm := New()
 	v := testMarshalJSONErrorStruct{e: errors.New("test error")}
-	vm.Set("v", &v)
+	_ = vm.Set("v", &v)
 	_, err := vm.RunString("JSON.stringify(v)")
 	if !errors.Is(err, v.e) {
 		t.Fatalf("Unexpected error: %v", err)
@@ -120,12 +120,12 @@ func BenchmarkJSONStringify(b *testing.B) {
 	var createObj func(level int) *Object
 	createObj = func(level int) *Object {
 		o := vm.NewObject()
-		o.Set("field1", "test")
-		o.Set("field2", 42)
+		_ = o.Set("field1", "test")
+		_ = o.Set("field2", 42)
 		if level > 0 {
 			level--
-			o.Set("obj1", createObj(level))
-			o.Set("obj2", createObj(level))
+			_ = o.Set("obj1", createObj(level))
+			_ = o.Set("obj2", createObj(level))
 		}
 		return o
 	}

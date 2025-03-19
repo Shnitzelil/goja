@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 	"unicode/utf16"
 	"unicode/utf8"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 const hex = "0123456789abcdef"

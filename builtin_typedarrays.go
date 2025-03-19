@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"sync"
 	"unsafe"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type typedArraySortCtx struct {

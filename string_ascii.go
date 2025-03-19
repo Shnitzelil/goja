@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"hash/maphash"
@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type asciiString string

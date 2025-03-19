@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"errors"
@@ -12,7 +12,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/grafana/sobek/parser"
+	"github.com/Shnitzelil/goja/parser"
 )
 
 func TestGlobalObjectProto(t *testing.T) {
@@ -211,7 +211,7 @@ func TestRecursiveRun(t *testing.T) {
 	// Make sure that a recursive call to Run*() correctly sets the environment and no stash or stack
 	// corruptions occur.
 	vm := New()
-	vm.Set("f", func() (Value, error) {
+	_ = vm.Set("f", func() (Value, error) {
 		return vm.RunString("let x = 1; { let z = 100, z1 = 200, z2 = 300, z3 = 400; x = x + z3} x;")
 	})
 	res, err := vm.RunString(`
@@ -242,7 +242,7 @@ func TestRecursiveRun(t *testing.T) {
 
 func TestRecursiveRunWithNArgs(t *testing.T) {
 	vm := New()
-	vm.Set("f", func() (Value, error) {
+	_ = vm.Set("f", func() (Value, error) {
 		return vm.RunString(`
 		{
 			let a = 0;
@@ -268,7 +268,7 @@ func TestRecursiveRunWithNArgs(t *testing.T) {
 func TestRecursiveRunCallee(t *testing.T) {
 	// Make sure that a recursive call to Run*() correctly sets the callee (i.e. stack[sb-1])
 	vm := New()
-	vm.Set("f", func() (Value, error) {
+	_ = vm.Set("f", func() (Value, error) {
 		return vm.RunString("this; (() => 1)()")
 	})
 	res, err := vm.RunString(`
@@ -289,8 +289,8 @@ func TestObjectGetSet(t *testing.T) {
 	`
 	r := New()
 	o := r.NewObject()
-	o.Set("test", 42)
-	r.Set("input", o)
+	_ = o.Set("test", 42)
+	_ = r.Set("input", o)
 
 	v, err := r.RunString(SCRIPT)
 	if err != nil {
@@ -314,7 +314,7 @@ func TestThrowFromNativeFunc(t *testing.T) {
 	thrown;
 	`
 	r := New()
-	r.Set("f", func(call FunctionCall) Value {
+	_ = r.Set("f", func(call FunctionCall) Value {
 		panic(r.ToValue("testError"))
 	})
 
@@ -333,7 +333,7 @@ func TestSetGoFunc(t *testing.T) {
 	f(40, 2)
 	`
 	r := New()
-	r.Set("f", func(a, b int) int {
+	_ = r.Set("f", func(a, b int) int {
 		return a + b
 	})
 
@@ -349,7 +349,7 @@ func TestSetGoFunc(t *testing.T) {
 
 func TestSetFuncVariadic(t *testing.T) {
 	vm := New()
-	vm.Set("f", func(s string, g ...Value) {
+	_ = vm.Set("f", func(s string, g ...Value) {
 		something := g[0].ToObject(vm).Get(s).ToInteger()
 		if something != 5 {
 			t.Fatal()
@@ -365,7 +365,7 @@ func TestSetFuncVariadic(t *testing.T) {
 
 func TestSetFuncVariadicFuncArg(t *testing.T) {
 	vm := New()
-	vm.Set("f", func(s string, g ...Value) {
+	_ = vm.Set("f", func(s string, g ...Value) {
 		if f, ok := AssertFunction(g[0]); ok {
 			v, err := f(nil)
 			if err != nil {
@@ -1196,7 +1196,7 @@ func TestGoFuncError(t *testing.T) {
 	}
 
 	vm := New()
-	vm.Set("f", f)
+	_ = vm.Set("f", f)
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -1234,8 +1234,8 @@ func TestToValueNil(t *testing.T) {
 
 func TestToValueFloat(t *testing.T) {
 	vm := New()
-	vm.Set("f64", float64(123))
-	vm.Set("f32", float32(321))
+	_ = vm.Set("f64", float64(123))
+	_ = vm.Set("f32", float32(321))
 
 	v, err := vm.RunString("f64 === 123 && f32 === 321")
 	if err != nil {
@@ -1252,8 +1252,8 @@ func TestToValueInterface(t *testing.T) {
 		return i == t
 	}
 	vm := New()
-	vm.Set("f", f)
-	vm.Set("t", t)
+	_ = vm.Set("f", f)
+	_ = vm.Set("t", t)
 	v, err := vm.RunString(`f(t)`)
 	if err != nil {
 		t.Fatal(err)
@@ -1311,7 +1311,7 @@ func TestJSONNil(t *testing.T) {
 
 	vm := New()
 	var i interface{}
-	vm.Set("i", i)
+	_ = vm.Set("i", i)
 	ret, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -1332,7 +1332,7 @@ func TestJsonEncodable(t *testing.T) {
 	var s customJsonEncodable
 
 	vm := New()
-	vm.Set("s", &s)
+	_ = vm.Set("s", &s)
 
 	ret, err := vm.RunString("JSON.stringify(s)")
 	if err != nil {
@@ -1431,7 +1431,7 @@ func TestNullCallArg(t *testing.T) {
 	`
 	vm := New()
 	prg := MustCompile("test.js", SCRIPT, false)
-	vm.Set("f", func(x *int) bool {
+	_ = vm.Set("f", func(x *int) bool {
 		return x == nil
 	})
 
@@ -1476,7 +1476,7 @@ func TestReflectCallExtraArgs(t *testing.T) {
 	}
 
 	vm := New()
-	vm.Set("f", f)
+	_ = vm.Set("f", f)
 
 	prg := MustCompile("test.js", SCRIPT, false)
 
@@ -1505,7 +1505,7 @@ func TestReflectCallNotEnoughArgs(t *testing.T) {
 		return x + y, nil
 	}
 
-	vm.Set("f", f)
+	_ = vm.Set("f", f)
 
 	prg := MustCompile("test.js", SCRIPT, false)
 
@@ -1538,7 +1538,7 @@ func TestReflectCallVariadic(t *testing.T) {
 	`
 
 	vm := New()
-	vm.Set("f", fmt.Sprintf)
+	_ = vm.Set("f", fmt.Sprintf)
 
 	prg := MustCompile("test.js", SCRIPT, false)
 
@@ -1550,7 +1550,7 @@ func TestReflectCallVariadic(t *testing.T) {
 
 func TestReflectNullValueArgument(t *testing.T) {
 	rt := New()
-	rt.Set("fn", func(v Value) {
+	_ = rt.Set("fn", func(v Value) {
 		if v == nil {
 			t.Error("null becomes nil")
 		}
@@ -1583,7 +1583,7 @@ func TestNativeConstruct(t *testing.T) {
 		return rt.ToValue(42)
 	}
 
-	rt.Set("F", func(call ConstructorCall) *Object { // constructor signature (as opposed to 'func(FunctionCall) Value')
+	_ = rt.Set("F", func(call ConstructorCall) *Object { // constructor signature (as opposed to 'func(FunctionCall) Value')
 		h := &testNativeConstructHelper{
 			rt:   rt,
 			base: call.Argument(0).ToInteger(),
@@ -1641,8 +1641,8 @@ func TestCreateObject(t *testing.T) {
 
 	inst := r.CreateObject(proto)
 
-	r.Set("C", c)
-	r.Set("inst", inst)
+	_ = r.Set("C", c)
+	_ = r.Set("inst", inst)
 
 	prg := MustCompile("test.js", SCRIPT, false)
 
@@ -1687,9 +1687,9 @@ func TestInterruptInWrappedFunction(t *testing.T) {
 
 func TestInterruptInWrappedFunction2(t *testing.T) {
 	rt := New()
-	// this test panics as otherwise Sobek will recover and possibly loop
+	// this test panics as otherwise goja will recover and possibly loop
 	var called bool
-	rt.Set("v", rt.ToValue(func() {
+	_ = rt.Set("v", rt.ToValue(func() {
 		if called {
 			go func() {
 				panic("this should never get called twice")
@@ -1699,11 +1699,11 @@ func TestInterruptInWrappedFunction2(t *testing.T) {
 		rt.Interrupt("here is the error")
 	}))
 
-	rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
+	_ = rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
 		return a(nil)
 	}))
 
-	rt.Set("k", rt.ToValue(func(e Value) {
+	_ = rt.Set("k", rt.ToValue(func(e Value) {
 		go func() {
 			panic("this should never get called actually")
 		}()
@@ -1743,16 +1743,16 @@ func TestInterruptInWrappedFunction2(t *testing.T) {
 
 func TestInterruptInWrappedFunction2Recover(t *testing.T) {
 	rt := New()
-	// this test panics as otherwise Sobek will recover and possibly loop
+	// this test panics as otherwise goja will recover and possibly loop
 	var vCalled int
-	rt.Set("v", rt.ToValue(func() {
+	_ = rt.Set("v", rt.ToValue(func() {
 		if vCalled == 0 {
 			rt.Interrupt("here is the error")
 		}
 		vCalled++
 	}))
 
-	rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
+	_ = rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
 		v, err := a(nil)
 		if err != nil {
 			intErr := new(InterruptedError)
@@ -1765,7 +1765,7 @@ func TestInterruptInWrappedFunction2Recover(t *testing.T) {
 	}))
 	var kCalled int
 
-	rt.Set("k", rt.ToValue(func(e Value) {
+	_ = rt.Set("k", rt.ToValue(func(e Value) {
 		kCalled++
 	}))
 	_, err := rt.RunString(`
@@ -1802,12 +1802,12 @@ func TestInterruptInWrappedFunction2Recover(t *testing.T) {
 
 func TestInterruptInWrappedFunctionExpectInteruptError(t *testing.T) {
 	rt := New()
-	// this test panics as otherwise Sobek will recover and possibly loop
-	rt.Set("v", rt.ToValue(func() {
+	// this test panics as otherwise goja will recover and possibly loop
+	_ = rt.Set("v", rt.ToValue(func() {
 		rt.Interrupt("here is the error")
 	}))
 
-	rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
+	_ = rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
 		return a(nil)
 	}))
 
@@ -1831,8 +1831,8 @@ func TestInterruptInWrappedFunctionExpectInteruptError(t *testing.T) {
 func TestInterruptInWrappedFunctionExpectStackOverflowError(t *testing.T) {
 	rt := New()
 	rt.SetMaxCallStackSize(5)
-	// this test panics as otherwise Sobek will recover and possibly loop
-	rt.Set("v", rt.ToValue(func() {
+	// this test panics as otherwise goja will recover and possibly loop
+	_ = rt.Set("v", rt.ToValue(func() {
 		_, err := rt.RunString(`
 		(function loop() { loop() })();
 		`)
@@ -1841,7 +1841,7 @@ func TestInterruptInWrappedFunctionExpectStackOverflowError(t *testing.T) {
 		}
 	}))
 
-	rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
+	_ = rt.Set("s", rt.ToValue(func(a Callable) (Value, error) {
 		return a(nil)
 	}))
 
@@ -1863,12 +1863,12 @@ func TestInterruptWithPromises(t *testing.T) {
 	rt := New()
 	rt.SetMaxCallStackSize(5)
 	// this test panics as otherwise goja will recover and possibly loop
-	rt.Set("abort", rt.ToValue(func() {
+	_ = rt.Set("abort", rt.ToValue(func() {
 		// panic("waty")
 		rt.Interrupt("abort this")
 	}))
 	var queue = make(chan func() error, 10)
-	rt.Set("myPromise", func() Value {
+	_ = rt.Set("myPromise", func() Value {
 		p, resolve, _ := rt.NewPromise()
 		queue <- func() error {
 			return resolve("some value")
@@ -2155,7 +2155,7 @@ func TestObjSet(t *testing.T) {
 func TestToValueNilValue(t *testing.T) {
 	r := New()
 	var a Value
-	r.Set("a", a)
+	_ = r.Set("a", a)
 	ret, err := r.RunString(`
 	""+a;
 	`)
@@ -2174,7 +2174,7 @@ func TestDateConversion(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	vm.Set("d", val)
+	_ = vm.Set("d", val)
 	res, err := vm.RunString(`+d`)
 	if err != nil {
 		t.Fatal(err)
@@ -2182,7 +2182,7 @@ func TestDateConversion(t *testing.T) {
 	if exp := res.Export(); exp != now.UnixNano()/1e6 {
 		t.Fatalf("Value does not match: %v", exp)
 	}
-	vm.Set("goval", now)
+	_ = vm.Set("goval", now)
 	res, err = vm.RunString(`+(new Date(goval.UnixNano()/1e6))`)
 	if err != nil {
 		t.Fatal(err)
@@ -2205,10 +2205,10 @@ func TestNativeCtorNewTarget(t *testing.T) {
 
 func TestNativeCtorNonNewCall(t *testing.T) {
 	vm := New()
-	vm.Set(`Animal`, func(call ConstructorCall) *Object {
+	_ = vm.Set(`Animal`, func(call ConstructorCall) *Object {
 		obj := call.This
-		obj.Set(`name`, call.Argument(0).String())
-		obj.Set(`eat`, func(call FunctionCall) Value {
+		_ = obj.Set(`name`, call.Argument(0).String())
+		_ = obj.Set(`eat`, func(call FunctionCall) Value {
 			self := call.This.(*Object)
 			return vm.ToValue(fmt.Sprintf("%s eat", self.Get(`name`)))
 		})
@@ -2262,7 +2262,7 @@ func ExampleObject_SetSymbol() {
 	o.SetSymbol(SymIterator, func() *Object {
 		count := 0
 		iter := vm.NewObject()
-		iter.Set("next", func() IterResult {
+		_ = iter.Set("next", func() IterResult {
 			if count < 10 {
 				count++
 				return IterResult{
@@ -2275,7 +2275,7 @@ func ExampleObject_SetSymbol() {
 		})
 		return iter
 	})
-	vm.Set("o", o)
+	_ = vm.Set("o", o)
 
 	res, err := vm.RunString(`
 	var acc = "";
@@ -2294,7 +2294,7 @@ func ExampleObject_SetSymbol() {
 func ExampleRuntime_NewArray() {
 	vm := New()
 	array := vm.NewArray(1, 2, true)
-	vm.Set("array", array)
+	_ = vm.Set("array", array)
 	res, err := vm.RunString(`
 	var acc = "";
 	for (var v of array) {
@@ -2338,7 +2338,7 @@ func TestRuntime_SetParserOptions_Eval(t *testing.T) {
 
 func TestNativeCallWithRuntimeParameter(t *testing.T) {
 	vm := New()
-	vm.Set("f", func(_ FunctionCall, r *Runtime) Value {
+	_ = vm.Set("f", func(_ FunctionCall, r *Runtime) Value {
 		if r == vm {
 			return valueTrue
 		}
@@ -2512,7 +2512,7 @@ func TestStacktraceLocationThrowFromGo(t *testing.T) {
 	f := func() {
 		panic(vm.ToValue("Test"))
 	}
-	vm.Set("f", f)
+	_ = vm.Set("f", f)
 	_, err := vm.RunString(`
 	function main() {
 		(function noop() {})();
@@ -2562,7 +2562,7 @@ func TestStacktraceLocationThrowNativeInTheMiddle(t *testing.T) {
 	f := func() {
 		f1()
 	}
-	vm.Set("f", f)
+	_ = vm.Set("f", f)
 	_, err = vm.RunString(`
 	function main() {
 		(function noop() {})();
@@ -2844,7 +2844,7 @@ func TestErrorStack(t *testing.T) {
 
 func TestErrorFormatSymbols(t *testing.T) {
 	vm := New()
-	vm.Set("a", func() (Value, error) { return nil, errors.New("something %s %f") })
+	_ = vm.Set("a", func() (Value, error) { return nil, errors.New("something %s %f") })
 	_, err := vm.RunString("a()")
 	if err == nil {
 		t.Fatal("expected error")
@@ -2857,7 +2857,7 @@ func TestErrorFormatSymbols(t *testing.T) {
 func TestPanicPassthrough(t *testing.T) {
 	const panicString = "Test panic"
 	r := New()
-	r.Set("f", func() {
+	_ = r.Set("f", func() {
 		panic(panicString)
 	})
 	defer func() {
@@ -3008,7 +3008,7 @@ func TestAsyncStacktrace(t *testing.T) {
 
 func TestPanicPropagation(t *testing.T) {
 	r := New()
-	r.Set("doPanic", func() {
+	_ = r.Set("doPanic", func() {
 		panic(true)
 	})
 	v, err := r.RunString(`(function() {
@@ -3113,7 +3113,7 @@ func TestToNumber(t *testing.T) {
 
 func TestToValueNilBigInt(t *testing.T) {
 	vm := New()
-	vm.Set("n", (*big.Int)(nil))
+	_ = vm.Set("n", (*big.Int)(nil))
 	vm.testScript(`n === 0n`, valueTrue, t)
 }
 
@@ -3142,7 +3142,7 @@ function foo(a,b,c)
 
 func BenchmarkCallReflect(b *testing.B) {
 	vm := New()
-	vm.Set("f", func(v Value) {
+	_ = vm.Set("f", func(v Value) {
 
 	})
 
@@ -3156,7 +3156,7 @@ func BenchmarkCallReflect(b *testing.B) {
 
 func BenchmarkCallNative(b *testing.B) {
 	vm := New()
-	vm.Set("f", func(call FunctionCall) (ret Value) {
+	_ = vm.Set("f", func(call FunctionCall) (ret Value) {
 		return
 	})
 

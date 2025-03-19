@@ -1,11 +1,11 @@
-package sobek
+package goja
 
 import (
 	"fmt"
 	"reflect"
 	"strconv"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 /*

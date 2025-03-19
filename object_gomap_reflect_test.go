@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"sort"
@@ -16,7 +16,7 @@ func TestGoMapReflectGetSet(t *testing.T) {
 		"a": "4",
 		"b": "2",
 	}
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
@@ -38,7 +38,7 @@ func TestGoMapReflectIntKey(t *testing.T) {
 		0: 40,
 		1: 2,
 	}
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
@@ -60,7 +60,7 @@ func TestGoMapReflectDelete(t *testing.T) {
 		"a": "4",
 		"b": "2",
 	}
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 
 	_, err := vm.RunString(SCRIPT)
 	if err != nil {
@@ -114,7 +114,7 @@ func TestGoMapReflectProto(t *testing.T) {
 	m := map[string]string{
 		"t": "42",
 	}
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -139,7 +139,7 @@ func TestGoMapReflectNoMethods(t *testing.T) {
 	vm := New()
 	m := make(gomapReflect_noMethods)
 	m["t"] = 42
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -158,7 +158,7 @@ func TestGoMapReflectWithMethods(t *testing.T) {
 	vm := New()
 	m := make(gomapReflect_withMethods)
 	m["t"] = 42
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 	v, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -174,7 +174,7 @@ func TestGoMapReflectWithProto(t *testing.T) {
 	m := map[string]string{
 		"t": "42",
 	}
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 	vm.testScriptWithTestLib(`
 	(function() {
 	'use strict';
@@ -242,7 +242,7 @@ func TestGoMapReflectProtoProp(t *testing.T) {
 	`
 
 	r := New()
-	r.Set("m", map[string]string{})
+	_ = r.Set("m", map[string]string{})
 	r.testScriptWithTestLib(SCRIPT, _undefined, t)
 }
 
@@ -264,8 +264,8 @@ func TestGoMapReflectUnicode(t *testing.T) {
 	s := S{
 		Тест: "passed",
 	}
-	vm.Set("m", m)
-	vm.Set("s", &s)
+	_ = vm.Set("m", m)
+	_ = vm.Set("s", &s)
 	res, err := vm.RunString(SCRIPT)
 	if err != nil {
 		t.Fatal(err)
@@ -285,7 +285,7 @@ func TestGoMapReflectStruct(t *testing.T) {
 	}
 
 	vm := New()
-	vm.Set("m", m)
+	_ = vm.Set("m", m)
 	res, err := vm.RunString("m[1].Test = 2; m[1].Test")
 	if err != nil {
 		t.Fatal(err)
@@ -302,7 +302,7 @@ func TestGoMapReflectElt(t *testing.T) {
 
 	r := New()
 
-	r.Set("a", mapping{
+	_ = r.Set("a", mapping{
 		"s": func() bool { return true },
 		"t": nil,
 	})

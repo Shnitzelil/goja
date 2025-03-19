@@ -1,8 +1,8 @@
-package sobek
+package goja
 
 import (
 	"fmt"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 	"math"
 	"reflect"
 	"sort"

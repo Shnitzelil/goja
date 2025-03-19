@@ -1,7 +1,7 @@
-package sobek
+package goja
 
 import (
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type nativeProxyHandler struct {

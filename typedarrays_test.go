@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"bytes"
@@ -27,7 +27,7 @@ func TestArrayBufferGoWrapper(t *testing.T) {
 	vm := New()
 	data := []byte{0xAA, 0xBB}
 	buf := vm.NewArrayBuffer(data)
-	vm.Set("buf", buf)
+	_ = vm.Set("buf", buf)
 	_, err := vm.RunString(`
 	var a = new Uint8Array(buf);
 	if (a.length !== 2 || a[0] !== 0xAA || a[1] !== 0xBB) {
@@ -164,7 +164,7 @@ func TestTypedArraySetDetachedBuffer(t *testing.T) {
 	assert.sameValue(sample['2'], undefined, 'sample[\'2\'] = 1 is undefined');	
 	`
 	vm := New()
-	vm.Set("$DETACHBUFFER", func(buf *ArrayBuffer) {
+	_ = vm.Set("$DETACHBUFFER", func(buf *ArrayBuffer) {
 		buf.Detach()
 	})
 	vm.testScriptWithTestLib(SCRIPT, _undefined, t)
@@ -275,7 +275,7 @@ func TestTypedArrayDefinePropDetachedBuffer(t *testing.T) {
 	);
 	`
 	vm := New()
-	vm.Set("$DETACHBUFFER", func(buf *ArrayBuffer) {
+	_ = vm.Set("$DETACHBUFFER", func(buf *ArrayBuffer) {
 		buf.Detach()
 	})
 	vm.testScriptWithTestLib(SCRIPT, _undefined, t)

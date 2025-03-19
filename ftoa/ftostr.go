@@ -4,7 +4,7 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/grafana/sobek/ftoa/internal/fast"
+	"github.com/Shnitzelil/goja/ftoa/internal/fast"
 )
 
 type FToStrMode int

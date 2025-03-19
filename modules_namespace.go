@@ -1,9 +1,9 @@
-package sobek
+package goja
 
 import (
 	"sort"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type namespaceObject struct {

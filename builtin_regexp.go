@@ -1,8 +1,8 @@
-package sobek
+package goja
 
 import (
 	"fmt"
-	"github.com/grafana/sobek/parser"
+	"github.com/Shnitzelil/goja/parser"
 	"regexp"
 	"strings"
 	"unicode/utf16"

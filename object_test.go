@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"fmt"
@@ -28,7 +28,7 @@ func TestDefineProperty(t *testing.T) {
 			return o.Get("__hidden")
 		}),
 		r.ToValue(func(call FunctionCall) (ret Value) {
-			o.Set("__hidden", call.Argument(0))
+			_ = o.Set("__hidden", call.Argument(0))
 			return
 		}),
 		FLAG_TRUE, FLAG_TRUE)
@@ -141,7 +141,7 @@ func TestObjectAssign(t *testing.T) {
 func TestExportCircular(t *testing.T) {
 	vm := New()
 	o := vm.NewObject()
-	o.Set("o", o)
+	_ = o.Set("o", o)
 	v := o.Export()
 	if m, ok := v.(map[string]interface{}); ok {
 		if reflect.ValueOf(m["o"]).Pointer() != reflect.ValueOf(v).Pointer() {
@@ -175,7 +175,7 @@ type test_s1 struct {
 func TestExportToCircular(t *testing.T) {
 	vm := New()
 	o := vm.NewObject()
-	o.Set("o", o)
+	_ = o.Set("o", o)
 	var m map[string]interface{}
 	err := vm.ExportTo(o, &m)
 	if err != nil {
@@ -205,7 +205,7 @@ func TestExportToCircular(t *testing.T) {
 	}
 
 	o = vm.NewObject()
-	o.Set("S", o)
+	_ = o.Set("S", o)
 	var s test_s
 	err = vm.ExportTo(o, &s)
 	if err != nil {
@@ -221,7 +221,7 @@ func TestExportToCircular(t *testing.T) {
 	}
 
 	var s2 test_s2
-	o.Set("S1", o)
+	_ = o.Set("S1", o)
 
 	err = vm.ExportTo(o, &s2)
 	if err != nil {
@@ -240,8 +240,8 @@ func TestExportToCircular(t *testing.T) {
 	}
 
 	o1 := vm.NewObject()
-	o1.Set("S", o)
-	o1.Set("S1", o)
+	_ = o1.Set("S", o)
+	_ = o1.Set("S1", o)
 	err = vm.ExportTo(o1, &s2)
 	if err != nil {
 		t.Fatal(err)
@@ -509,7 +509,7 @@ func TestObjectEquality(t *testing.T) {
 		F CustomInt
 	}
 	vm := New()
-	vm.Set("s", S{})
+	_ = vm.Set("s", S{})
 	// indexOf() and includes() use different equality checks (StrictEquals and SameValueZero respectively),
 	// but for objects they must behave the same. De-referencing s.F creates a new wrapper each time.
 	vm.testScriptWithTestLib(`

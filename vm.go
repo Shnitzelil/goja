@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 const (

@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"fmt"
@@ -498,8 +498,8 @@ func TestModuleAsyncInterrupt(t *testing.T) {
 
 	rt := New()
 	var shouldntHappen bool
-	rt.Set("interrupt", rt.ToValue(func() { rt.Interrupt("the error we want") }))
-	rt.Set("badcall", rt.ToValue(func() { shouldntHappen = true }))
+	_ = rt.Set("interrupt", rt.ToValue(func() { rt.Interrupt("the error we want") }))
+	_ = rt.Set("badcall", rt.ToValue(func() { shouldntHappen = true }))
 
 	unhandledRejectedPromises := make(map[*Promise]struct{})
 	rt.promiseRejectionTracker = func(p *Promise, operation PromiseRejectionOperation) {

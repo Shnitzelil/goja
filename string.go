@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"io"
@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 const (

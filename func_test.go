@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"errors"
@@ -106,7 +106,7 @@ func TestWrappedFunc(t *testing.T) {
 	f := func(a int, b string) bool {
 		return a > 0 && b != ""
 	}
-	vm.Set("f", f)
+	_ = vm.Set("f", f)
 	const SCRIPT = `
 	assert.sameValue(typeof f, "function");
 	const s = f.toString()
@@ -229,8 +229,8 @@ func TestAsyncContextTracker(t *testing.T) {
 		return asyncFunc(FunctionCall{})
 	}
 	r.SetAsyncContextTracker(&tracker)
-	r.Set("group", group)
-	r.Set("check", func(expectedGroup, msg string) {
+	_ = r.Set("group", group)
+	_ = r.Set("check", func(expectedGroup, msg string) {
 		var groupName string
 		if tracker.ctx != nil {
 			groupName = tracker.ctx.group

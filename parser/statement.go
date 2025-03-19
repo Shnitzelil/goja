@@ -6,11 +6,11 @@ import (
 	"os"
 	"strings"
 
+	"github.com/Shnitzelil/goja/ast"
+	"github.com/Shnitzelil/goja/file"
+	"github.com/Shnitzelil/goja/token"
+	"github.com/Shnitzelil/goja/unistring"
 	"github.com/go-sourcemap/sourcemap"
-	"github.com/grafana/sobek/ast"
-	"github.com/grafana/sobek/file"
-	"github.com/grafana/sobek/token"
-	"github.com/grafana/sobek/unistring"
 )
 
 func (self *_parser) parseBlockStatement() *ast.BlockStatement {
@@ -1451,6 +1451,6 @@ func (self *_parser) parseImportedBinding() *ast.Identifier {
 
 func (self *_parser) parseBindingIdentifier() *ast.Identifier {
 	// FIXME: Ecma 262 defines yield and await as permitted binding identifier,
-	// but sobek does not support async/await nor generators yet?
+	// but goja does not support async/await nor generators yet?
 	return self.parseIdentifier()
 }

@@ -1,15 +1,15 @@
-package sobek
+package goja
 
 import (
-	"github.com/grafana/sobek/file"
-	"github.com/grafana/sobek/parser"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/file"
+	"github.com/Shnitzelil/goja/parser"
+	"github.com/Shnitzelil/goja/unistring"
 	"testing"
 )
 
 func TestTaggedTemplateArgExport(t *testing.T) {
 	vm := New()
-	vm.Set("f", func(v Value) {
+	_ = vm.Set("f", func(v Value) {
 		v.Export()
 	})
 	vm.RunString("f`test`")

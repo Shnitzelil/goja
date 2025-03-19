@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"os"
@@ -6,7 +6,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 const TESTLIB = `

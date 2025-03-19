@@ -9,9 +9,9 @@ node types are concerned) and may change in the future.
 package ast
 
 import (
-	"github.com/grafana/sobek/file"
-	"github.com/grafana/sobek/token"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/file"
+	"github.com/Shnitzelil/goja/token"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type PropertyKind string

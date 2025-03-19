@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"errors"
@@ -10,8 +10,8 @@ import (
 	"unicode/utf16"
 	"unicode/utf8"
 
-	"github.com/grafana/sobek/parser"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/parser"
+	"github.com/Shnitzelil/goja/unistring"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 )

@@ -1,11 +1,11 @@
-package sobek
+package goja
 
 import (
 	"math"
 	"math/bits"
 	"reflect"
 
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 type objectGoSliceReflect struct {

@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"errors"
@@ -113,7 +113,7 @@ var (
 		"test/built-ins/RegExp/unicode_restricted_character_class_escape.js":         true,
 		"test/annexB/built-ins/RegExp/prototype/compile/pattern-string-invalid-u.js": true,
 
-		// Because Sobek parser works in UTF-8 it is not possible to pass strings containing invalid UTF-16 code points.
+		// Because goja parser works in UTF-8 it is not possible to pass strings containing invalid UTF-16 code points.
 		// This is mitigated by escaping them as \uXXXX, however because of this the RegExp source becomes
 		// `\uXXXX` instead of `<the actual UTF-16 code point of XXXX>`.
 		// The resulting RegExp will work exactly the same, but it causes these two tests to fail.
@@ -462,9 +462,9 @@ func (ctx *tc39TestCtx) runTC39Test(name, src string, meta *tc39Meta, t testing.
 	}()
 	vm := New()
 	_262 := vm.NewObject()
-	_262.Set("detachArrayBuffer", ctx.detachArrayBuffer)
-	_262.Set("createRealm", ctx.throwIgnorableTestError)
-	_262.Set("evalScript", func(call FunctionCall) Value {
+	_ = _262.Set("detachArrayBuffer", ctx.detachArrayBuffer)
+	_ = _262.Set("createRealm", ctx.throwIgnorableTestError)
+	_ = _262.Set("evalScript", func(call FunctionCall) Value {
 		script := call.Argument(0).String()
 		result, err := vm.RunString(script)
 		if err != nil {
@@ -472,8 +472,8 @@ func (ctx *tc39TestCtx) runTC39Test(name, src string, meta *tc39Meta, t testing.
 		}
 		return result
 	})
-	vm.Set("$262", _262)
-	vm.Set("IgnorableTestError", ignorableTestError)
+	_ = vm.Set("$262", _262)
+	_ = vm.Set("IgnorableTestError", ignorableTestError)
 	vm.RunProgram(ctx.sabStub)
 	var out []string
 	async := meta.hasFlag("async")
@@ -532,11 +532,11 @@ func (ctx *tc39TestCtx) runTC39Test(name, src string, meta *tc39Meta, t testing.
 		if err != nil {
 			t.Fatal(err)
 		}
-		vm.Set("print", func(msg string) {
+		_ = vm.Set("print", func(msg string) {
 			out = append(out, msg)
 		})
 	} else {
-		vm.Set("print", t.Log)
+		_ = vm.Set("print", t.Log)
 	}
 
 	var err error

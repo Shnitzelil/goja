@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/grafana/sobek/parser"
-	"github.com/grafana/sobek/unistring"
+	"github.com/Shnitzelil/goja/parser"
+	"github.com/Shnitzelil/goja/unistring"
 )
 
 // JsonEncodable allows custom JSON encoding by JSON.stringify()

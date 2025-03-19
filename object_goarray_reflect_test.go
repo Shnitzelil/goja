@@ -1,4 +1,4 @@
-package sobek
+package goja
 
 import (
 	"testing"
@@ -6,7 +6,7 @@ import (
 
 func TestGoReflectArray(t *testing.T) {
 	vm := New()
-	vm.Set("a", [...]int{1, 2, 3})
+	_ = vm.Set("a", [...]int{1, 2, 3})
 	_, err := vm.RunString(`
 	if (!Array.isArray(a)) {
 		throw new Error("isArray() returned false");
@@ -29,7 +29,7 @@ func TestGoReflectArray(t *testing.T) {
 
 func TestGoReflectArraySort(t *testing.T) {
 	vm := New()
-	vm.Set("a", [...]int{3, 1, 2})
+	_ = vm.Set("a", [...]int{3, 1, 2})
 	v, err := vm.RunString(`
 		a.sort();
 		if (a[0] !== 1 || a[1] !== 2 || a[2] !== 3) {
@@ -246,7 +246,7 @@ func TestCopyOnChangeSort(t *testing.T) {
 	}{{"2"}, {"1"}}
 
 	vm := New()
-	vm.Set("a", &a)
+	_ = vm.Set("a", &a)
 
 	_, err := vm.RunString(`
 		let a0 = a[0];
@@ -283,7 +283,7 @@ func (a testStringerArray) String() string {
 func TestReflectArrayToString(t *testing.T) {
 	vm := New()
 	var a testStringerArray
-	vm.Set("a", &a)
+	_ = vm.Set("a", &a)
 	res, err := vm.RunString("`${a}`")
 	if err != nil {
 		t.Fatal(err)
@@ -293,7 +293,7 @@ func TestReflectArrayToString(t *testing.T) {
 	}
 
 	var a1 [2]byte
-	vm.Set("a", &a1)
+	_ = vm.Set("a", &a1)
 	res, err = vm.RunString("`${a}`")
 	if err != nil {
 		t.Fatal(err)

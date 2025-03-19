@@ -1,6 +1,6 @@
 # file
 --
-    import "github.com/grafana/sobek/file"
+    import "github.com/Shnitzelil/goja/file"
 
 Package file encapsulates the file abstractions used by the ast & parser.
 

@@ -1,12 +1,12 @@
-package sobek
+package goja
 
 import (
 	"fmt"
 	"sort"
 	"sync"
 
-	"github.com/grafana/sobek/ast"
-	"github.com/grafana/sobek/parser"
+	"github.com/Shnitzelil/goja/ast"
+	"github.com/Shnitzelil/goja/parser"
 )
 
 var (
@@ -32,7 +32,7 @@ func (s *SourceTextModuleInstance) ExecuteModule(rt *Runtime, res, rej func(inte
 	promise := s.asyncPromise
 	if !s.HasTLA() {
 		if res != nil {
-			panic("sobek bug where a not async module was executed as async on")
+			panic("goja bug where a not async module was executed as async on")
 		}
 		// we handle the failure below so we need to mark this as promise as handled so it doesn't
 		// trigger the PromiseRejectionTracker
@@ -43,13 +43,13 @@ func (s *SourceTextModuleInstance) ExecuteModule(rt *Runtime, res, rej func(inte
 		case PromiseStateRejected:
 			return nil, rt.vm.exceptionFromValue(promise.result)
 		case PromiseStatePending:
-			panic("sobek bug where an sync module was not executed synchronously")
+			panic("goja bug where an sync module was not executed synchronously")
 		default:
 			panic("Somehow promise from a module execution is in invalid state")
 		}
 	}
 	if res == nil {
-		panic("sobek bug where an async module was not executed as async")
+		panic("goja bug where an async module was not executed as async")
 	}
 	rt.performPromiseThen(s.asyncPromise, rt.ToValue(func(call FunctionCall) Value {
 		err := res(call.Argument(0))
@@ -239,7 +239,7 @@ func exportEntriesFromAst(declarations []*ast.ExportDeclaration) []exportEntry {
 				case *ast.ObjectPattern:
 					result = append(result, exportEntriesFromObjectPatter(i, false)...)
 				default:
-					panic("target for variable declaration export isn't supported. this is sobek bug.")
+					panic("target for variable declaration export isn't supported. this is goja bug.")
 				}
 			}
 		} else if LexicalDeclaration := exportDeclaration.LexicalDeclaration; LexicalDeclaration != nil {
@@ -250,7 +250,7 @@ func exportEntriesFromAst(declarations []*ast.ExportDeclaration) []exportEntry {
 				case *ast.ObjectPattern:
 					result = append(result, exportEntriesFromObjectPatter(i, true)...)
 				default:
-					panic("target for lexical declaration export isn't supported. this is sobek bug.")
+					panic("target for lexical declaration export isn't supported. this is goja bug.")
 				}
 			}
 		} else if hoistable := exportDeclaration.HoistableDeclaration; hoistable != nil {
